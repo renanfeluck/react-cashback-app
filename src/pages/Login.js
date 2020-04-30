@@ -48,8 +48,12 @@ function Login(props) {
   const [invalidPass, setInvalidPass] = useState(false);
 
   function handleLogin() {
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+
     fetch(
-      "https://my-json-server.typicode.com/renanfeluck/boticario-fakeapi/users"
+      "https://my-json-server.typicode.com/renanfeluck/boticario-fakeapi/users",
+      { signal: signal }
     )
       .then((res) => res.json())
       .then((users) => {
@@ -65,6 +69,9 @@ function Login(props) {
           setInvalidPass(true);
         });
       });
+    return function cleanup() {
+      abortController.abort();
+    };
   }
 
   return (
@@ -72,7 +79,6 @@ function Login(props) {
       <Grid container spacing={0}>
         <Hidden smDown>
           <Grid
-            only="xs"
             item
             xs={12}
             md={4}

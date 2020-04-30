@@ -1,6 +1,5 @@
 import React from "react";
 import headerLogo from "../assets/header-logo.png";
-import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 

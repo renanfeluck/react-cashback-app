@@ -5,8 +5,6 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Alert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
-import * as users from "../mock/user-mock.json";
-import { Redirect } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import boticarioImage from "../assets/boticario.png";
@@ -49,18 +47,13 @@ function Login(props) {
   const [passConfirm, setPassConfirm] = useState("");
   const [cpf, setCpf] = useState("");
   const [name, setName] = useState("");
-  const [userExist, setuserExist] = useState(false);
   const [error, setError] = useState(false);
+  const [passError, setPassError] = useState(false);
 
   function handleRegister() {
-    users.default.forEach((user) => {
-      if (email == user.email) {
-        setuserExist(true);
-        return;
-      }
-    });
-
-    if (!userExist) {
+    if (pass !== passConfirm) {
+      setPassError(true);
+    } else {
       const newUser = {
         id: Math.floor(Math.random() * 100000),
         name: name,
@@ -68,25 +61,26 @@ function Login(props) {
         email: email,
         password: pass,
       };
-      users.default = [...users.default, newUser];
+
       fetch(
         "https://my-json-server.typicode.com/renanfeluck/boticario-fakeapi/users",
         {
           method: "POST", // or 'PUT'
-          mode: "no-cors", // no-cors, *cors, same-origin
+          // mode: "no-cors", // no-cors, *cors, same-origin
           body: JSON.stringify(newUser),
         }
       )
+        .then((res) => res.json())
         .then((data) => {
           console.log("Success:", data);
+          setError(false);
+          setPassError(false);
           history.push("/login");
         })
         .catch((error) => {
           console.error("Error:", error);
           setError(true);
         });
-    } else {
-      setuserExist(false);
     }
   }
 
@@ -125,10 +119,10 @@ function Login(props) {
                 tarde
               </Alert>
               <Alert
-                style={{ display: userExist == true ? "flex" : "none" }}
+                style={{ display: passError == true ? "flex" : "none" }}
                 severity="error"
               >
-                Email já cadastrado
+                Confirmação de senha inválida
               </Alert>
             </Box>
             <Box>

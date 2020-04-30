@@ -24,16 +24,9 @@ function Home() {
   const [date, setDate] = useState("");
   const [cashAvailable, setCashAvailable] = useState("");
   const [cashPending, setCashPending] = useState("");
-  const [selectedDate, setSelectedDate] = useState(
-    new Date("2014-08-18T21:11:54")
-  );
 
   const user = localStorage.getItem("user");
   let history = useHistory();
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
 
   useEffect(() => {
     fetch(
@@ -45,7 +38,6 @@ function Home() {
         setBuys(data.buys);
         setCashAvailable(data.cashAvailable);
         setCashPending(data.cashPending);
-        console.log("Success:", buys);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -71,10 +63,9 @@ function Home() {
       cashback: value * 0.1,
       status: "em analise",
     };
-    console.log("newBuy", newBuy);
     const newBuys = [...buys, newBuy];
     setBuys(newBuys);
-    const newCash = parseFloat(cashPending) + parseFloat(value);
+    const newCash = parseFloat(cashPending) + parseFloat(value) * 0.1;
     setCashPending(newCash);
     setOpen(false);
   }
@@ -153,7 +144,7 @@ function Home() {
         </Box>
         {buys.map((buy, index) => {
           return (
-            <ExpansionPanel style={{ marginBottom: 12 }}>
+            <ExpansionPanel key={index} style={{ marginBottom: 12 }}>
               <ExpansionPanelSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
@@ -166,7 +157,8 @@ function Home() {
                   <Grid item xs={12} md={6}>
                     <Typography>
                       Status:{" "}
-                      <Typography
+                      <Box
+                        component="span"
                         style={{
                           color:
                             buy.status === "aprovado"
@@ -178,7 +170,7 @@ function Home() {
                       >
                         {" "}
                         {buy.status}
-                      </Typography>
+                      </Box>
                     </Typography>
                   </Grid>
                 </Grid>
