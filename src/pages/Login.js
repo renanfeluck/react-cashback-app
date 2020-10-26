@@ -52,7 +52,7 @@ function Login(props) {
     const signal = abortController.signal;
 
     fetch(
-      "https://my-json-server.typicode.com/renanfeluck/boticario-fakeapi/users",
+      "https://my-json-server.typicode.com/renanfeluck/fakeapi/users",
       { signal: signal }
     )
       .then((res) => res.json())
